@@ -16,6 +16,8 @@ class WeeklyScreen extends StatefulWidget {
 }
 
 class _WeeklyScreenState extends State<WeeklyScreen> {
+  Box boxExpanses = HiveService.expenseBox();
+  final String expansesBoxName = HiveService.expenseBoxName;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -38,9 +40,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box<ExpansesModel>(
-                    HiveService.instance.boxName,
-                  ).listenable(),
+                  valueListenable: Hive.box<ExpansesModel>(expansesBoxName).listenable(),
                   builder: (context, value, child) {
                     final expanses = value.values.toList().reversed.take(7).toList();
 
@@ -67,9 +67,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box<ExpansesModel>(
-                    HiveService.instance.boxName,
-                  ).listenable(),
+                  valueListenable: Hive.box<ExpansesModel>(expansesBoxName).listenable(),
                   builder: (context, value, child) {
                     final expanses = value.values.toList().reversed.take(7).toList();
 
@@ -102,7 +100,8 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
 
                                 confirmDismiss: (direction) async {
                                   if (direction == DismissDirection.startToEnd) {
-                                    HiveService.instance.update(
+                                    boxExpanses.put(
+                                      expanses[index].id,
                                       expanses[index].copyWith(isDone: !expanses[index].isDone),
                                     );
 
@@ -110,7 +109,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
                                   }
 
                                   if (direction == DismissDirection.endToStart) {
-                                    HiveService.instance.delete(expanses[index]);
+                                    boxExpanses.delete(expanses[index]);
                                     return true;
                                   }
 

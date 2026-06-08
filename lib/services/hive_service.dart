@@ -1,41 +1,45 @@
 import 'package:expense_tracker/models/expanses_model.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:expense_tracker/models/settings_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveService {
-  HiveService._();
-  static final HiveService instance = HiveService._();
-  final String boxName = "expanses";
+  static const String settingBoxName = "settingsBox";
+  static const String expenseBoxName = "expenseBox";
 
-  late Box<ExpansesModel> box;
-  Future<void> initHive() async {
+  static Future<void> init() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(ExpansesModelAdapter());
-    await Hive.openBox<ExpansesModel>(boxName);
 
-    box = Hive.box<ExpansesModel>(boxName);
-  }
-
-  Future<void> store(ExpansesModel data) async {
-    await box.put(data.id, data);
-  }
-
-  List<ExpansesModel> get() {
-    return box.values.toList();
-  }
-
-  Future<void> update(ExpansesModel expanses) async {
-    if (box.containsKey(expanses.id)) {}
-    await box.put(expanses.id, expanses);
-    for (var item in box.keys.toList()) {
-      print(item);
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(SettingsModelAdapter());
     }
+
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(ExpansesModelAdapter());
+    }
+
+    await Hive.openBox<SettingsModel>(settingBoxName);
+    await Hive.openBox<ExpansesModel>(expenseBoxName);
   }
 
-  Future<void> delete(ExpansesModel expanses) async {
-    await box.delete(expanses.id);
+  static Box<SettingsModel> settingBox() {
+    return Hive.box<SettingsModel>(settingBoxName);
   }
 
-  Future<void> deleteAll() async {
-    await box.clear();
+  static Box<ExpansesModel> expenseBox() {
+    return Hive.box<ExpansesModel>(expenseBoxName);
+  }
+
+  static Future<void> saveSettings(SettingsModel setting) async {
+    await settingBox().put(settingBoxName, setting);
+  }
+
+  static SettingsModel getSettings() {
+    SettingsModel settingsModel = SettingsModel(
+      isDark: false,
+      userName: "Guest",
+      profileImagePath: "",
+      
+    );
+    return settingBox().get(settingBoxName) ?? settingsModel;
   }
 }

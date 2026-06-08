@@ -13,6 +13,8 @@ class YearlyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Box boxExpanses = HiveService.expenseBox();
+    final String expansesBoxName = HiveService.expenseBoxName;
     return DefaultTabController(
       length: 2,
 
@@ -34,9 +36,7 @@ class YearlyScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box<ExpansesModel>(
-                    HiveService.instance.boxName,
-                  ).listenable(),
+                  valueListenable: Hive.box<ExpansesModel>(expansesBoxName).listenable(),
                   builder: (context, value, child) {
                     final expanses = value.values
                         .where((element) => element.dateTime.year == DateTime.now().year)
@@ -65,9 +65,7 @@ class YearlyScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ValueListenableBuilder(
-                  valueListenable: Hive.box<ExpansesModel>(
-                    HiveService.instance.boxName,
-                  ).listenable(),
+                  valueListenable: Hive.box<ExpansesModel>(expansesBoxName).listenable(),
                   builder: (context, value, child) {
                     final expanses = value.values
                         .where((element) => element.dateTime.year == DateTime.now().year)
@@ -103,7 +101,8 @@ class YearlyScreen extends StatelessWidget {
 
                                 confirmDismiss: (direction) async {
                                   if (direction == DismissDirection.startToEnd) {
-                                    HiveService.instance.update(
+                                    boxExpanses.put(
+                                      expanses[index].id,
                                       expanses[index].copyWith(isDone: !expanses[index].isDone),
                                     );
 
@@ -111,7 +110,7 @@ class YearlyScreen extends StatelessWidget {
                                   }
 
                                   if (direction == DismissDirection.endToStart) {
-                                    HiveService.instance.delete(expanses[index]);
+                                    boxExpanses.delete(expanses[index]);
                                     return true;
                                   }
 

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         child: BlocSelector<ThemeCubit, ThemeState, ThemeData>(
           selector: (state) {
             if (state is ThemeInitial) {
-              return state.theme;
+              return (state.isDark) ? ThemeData.dark() : ThemeData.light();
             } else {
               return ThemeData.light();
             }

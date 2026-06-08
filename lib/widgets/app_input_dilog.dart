@@ -5,6 +5,7 @@ import 'package:expense_tracker/widgets/app_snakbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 
 class AppInputDilog extends StatelessWidget {
   final int? id;
@@ -20,6 +21,7 @@ class AppInputDilog extends StatelessWidget {
       title.text = expanses!.title;
       prices.text = expanses!.prices.toString();
     }
+    Box boxExpanses = HiveService.expenseBox();
     return Dialog(
       child: Padding(
         padding: EdgeInsetsGeometry.all(10),
@@ -57,7 +59,9 @@ class AppInputDilog extends StatelessWidget {
                   spacing: 10,
                   children: [
                     Text("Done: ${(expanses!.isDone) ? 'true' : 'false'}"),
-                    Text("Updated times: ${(expanses!.updated > 0) ? expanses!.updated.toString() : ''}"),
+                    Text(
+                      "Updated times: ${(expanses!.updated > 0) ? expanses!.updated.toString() : ''}",
+                    ),
                   ],
                 ),
               Row(
@@ -73,7 +77,8 @@ class AppInputDilog extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (expanses != null) {
-                        HiveService.instance.update(
+                        boxExpanses.put(
+                          expanses!.id,
                           expanses!.copyWith(
                             title: title.text.toString().trim(),
                             prices: double.parse(prices.text.toString().trim()),
@@ -82,8 +87,11 @@ class AppInputDilog extends StatelessWidget {
                         );
                         appSnakBar(context, message: "Updated!");
                       } else {
-                        HiveService.instance.store(
+                        String k = DateTime.now().microsecondsSinceEpoch.toString();
+                        boxExpanses.put(
+                          k,
                           ExpansesModel(
+                            id: k,
                             title: title.text.toString().trim(),
                             prices: double.parse(prices.text.toString().trim()),
                             dateTime: DateTime.now(),

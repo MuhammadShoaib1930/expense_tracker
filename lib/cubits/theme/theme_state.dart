@@ -8,8 +8,10 @@ sealed class ThemeState extends Equatable {
 }
 
 final class ThemeInitial extends ThemeState {
-  final ThemeData theme;
-  const ThemeInitial({required this.theme});
+  final bool isDark;
+  final String imagePath;
+  final String userName;
+  const ThemeInitial({this.isDark=false,this.imagePath="",this.userName="Guest"});
   @override
-  List<Object> get props => [theme];
+  List<Object> get props => [isDark, imagePath, userName];
 }
