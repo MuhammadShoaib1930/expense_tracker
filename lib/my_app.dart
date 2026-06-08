@@ -25,7 +25,10 @@ class MyApp extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            return MaterialApp.router(routerConfig: route, theme: state);
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+
+              routerConfig: route, theme: state);
           },
         ),
       ),

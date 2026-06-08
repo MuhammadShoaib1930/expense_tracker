@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:expense_tracker/cubits/theme/theme_cubit.dart';
 import 'package:expense_tracker/models/settings_model.dart';
+import 'package:expense_tracker/services/app_pdf_services.dart';
+import 'package:expense_tracker/services/app_share_services.dart';
 import 'package:expense_tracker/services/hive_service.dart';
 import 'package:expense_tracker/widgets/about_app.dart';
 import 'package:expense_tracker/widgets/app_image_picker.dart';
@@ -91,11 +93,51 @@ class AppDrawer extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () {
                   SettingsModel settingsModel = HiveService.getSettings();
-                  HiveService.saveSettings(settingsModel.copyWith(isDark:  !settingsModel.isDark));
+                  HiveService.saveSettings(settingsModel.copyWith(isDark: !settingsModel.isDark));
                   context.read<ThemeCubit>().themeTogle();
                 },
                 label: Text((isDark) ? "Light" : "Dark", style: TextStyle(fontSize: 18)),
                 icon: Icon((isDark) ? Icons.sunny : Icons.dark_mode),
+              ),
+            ),
+            SizedBox(
+              width: 300.w,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                },
+                label: Text("Download expanses report as pdf! ", style: TextStyle(fontSize: 18)),
+                icon: Icon(Icons.file_copy),
+              ),
+            ),
+            SizedBox(
+              width: 300.w,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                },
+                label: Text("Download expanses report as Excel! ", style: TextStyle(fontSize: 18)),
+                icon: Icon(Icons.file_copy),
+              ),
+            ),
+            SizedBox(
+              width: 300.w,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  AppShareServices().shareExcel();
+                },
+                label: Text("Shear expanses report as Excel! ", style: TextStyle(fontSize: 18)),
+                icon: Icon(Icons.share),
+              ),
+            ),
+            SizedBox(
+              width: 300.w,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  AppShareServices().sharePdf();
+                },
+                label: Text("Shear expanses report as pdf! ", style: TextStyle(fontSize: 18)),
+                icon: Icon(Icons.share),
               ),
             ),
 
