@@ -11,7 +11,6 @@ import 'package:expense_tracker/widgets/app_name_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -21,7 +20,6 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final String profileImagePath = HiveService.getSettings().profileImagePath;
     return Drawer(
       shape: OutlineInputBorder(
         borderRadius: BorderRadius.only(
@@ -51,11 +49,15 @@ class AppDrawer extends StatelessWidget {
                           HiveService.settingBoxName,
                         ).listenable(),
                         builder: (context, Box<SettingsModel> box, child) {
-                          String path = box.get(HiveService.settingBoxName)!.profileImagePath;
+                          final settings = box.get(HiveService.settingBoxName);
+
+                          final String path = settings?.profileImagePath ?? '';
+
                           return CircleAvatar(
                             radius: 40,
                             backgroundImage: path.isNotEmpty ? FileImage(File(path)) : null,
                             backgroundColor: Colors.blue,
+
                             child: path.isEmpty
                                 ? const Icon(Icons.person, size: 40, color: Colors.white)
                                 : null,
@@ -77,8 +79,9 @@ class AppDrawer extends StatelessWidget {
                           HiveService.settingBoxName,
                         ).listenable(),
                         builder: (context, Box<SettingsModel> box, child) {
+                          final settings = box.get(HiveService.settingBoxName);
                           return Text(
-                            box.get(HiveService.settingBoxName)!.userName,
+                            settings?.userName ?? "Guest",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           );
                         },

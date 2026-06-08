@@ -42,7 +42,9 @@ class AppExcelServices {
 
     final fileBytes = excel.save();
     final file = File(filePath);
-
+    if (await file.exists()) {
+      await file.delete();
+    }
     await file.writeAsBytes(fileBytes!);
 
     return file;

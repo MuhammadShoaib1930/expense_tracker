@@ -36,7 +36,7 @@ class AppImagePicker extends StatelessWidget {
               ),
               ElevatedButton.icon(
                 onPressed: () async {
-                  await imagePickerServices.imagePick(isCamera: true);
+                  await imagePickerServices.imagePick(isCamera: false);
                 },
                 label: Text("Gallery"),
                 icon: Icon(Icons.folder),
@@ -48,7 +48,7 @@ class AppImagePicker extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(onPressed: () async{
                       await imagePickerServices.saveImage();
-                      
+
                   }, label: Text("Set"), icon: Icon(Icons.save)),
                   ElevatedButton.icon(
                     onPressed: () {

@@ -64,10 +64,12 @@ class AppPdfServices {
     );
 
     // 📂 Save file
-    final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/expense_report.pdf';
+    final directory = await getDownloadsDirectory();
+    final filePath = '${directory!.path}/expense_report.pdf';
     final file = File(filePath);
-
+    if (await file.exists()) {
+      await file.delete();
+    }
     await file.writeAsBytes(await pdf.save());
 
     return file;
