@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:excel/excel.dart';
-import 'package:expense_tracker/models/expanses_model.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../models/expanses_model.dart';
 
 class AppExcelServices {
   Future<File> createExpenseExcel(List<ExpansesModel> expenses) async {

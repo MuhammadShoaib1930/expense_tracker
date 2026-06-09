@@ -1,7 +1,8 @@
-import 'package:expense_tracker/models/settings_model.dart';
-import 'package:expense_tracker/services/hive_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+
+import '../../models/settings_model.dart';
+import '../../services/hive_service.dart';
 
 part 'theme_state.dart';
 

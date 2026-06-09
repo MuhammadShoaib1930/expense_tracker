@@ -1,4 +1,5 @@
-import 'package:expense_tracker/models/expanses_model.dart';
+
+import '../models/expanses_model.dart';
 
 class AppGraphsServices {
   static double maxValue(List<ExpansesModel> expanses) {

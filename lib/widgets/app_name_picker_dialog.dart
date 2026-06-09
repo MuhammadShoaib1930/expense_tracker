@@ -1,9 +1,10 @@
-import 'package:expense_tracker/models/settings_model.dart';
-import 'package:expense_tracker/services/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../models/settings_model.dart';
+import '../services/hive_service.dart';
 
 class AppNamePickerDialog extends StatelessWidget {
   final bool isDark;

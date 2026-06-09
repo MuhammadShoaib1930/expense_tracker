@@ -1,12 +1,13 @@
-import 'package:expense_tracker/models/expanses_model.dart';
-import 'package:expense_tracker/services/app_graphs_services.dart';
-import 'package:expense_tracker/services/date_time_service.dart';
-import 'package:expense_tracker/services/hive_service.dart';
-import 'package:expense_tracker/widgets/app_graphs.dart';
-import 'package:expense_tracker/widgets/app_input_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import '../models/expanses_model.dart';
+import '../services/app_graphs_services.dart';
+import '../services/date_time_service.dart';
+import '../services/hive_service.dart';
+import '../widgets/app_graphs.dart';
+import '../widgets/app_input_dilog.dart';
 
 class WeeklyScreen extends StatefulWidget {
   const WeeklyScreen({super.key});

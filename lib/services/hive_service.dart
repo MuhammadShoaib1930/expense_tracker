@@ -1,6 +1,7 @@
-import 'package:expense_tracker/models/expanses_model.dart';
-import 'package:expense_tracker/models/settings_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import '../models/expanses_model.dart';
+import '../models/settings_model.dart';
 
 class HiveService {
   static const String settingBoxName = "settingsBox";

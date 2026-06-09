@@ -1,8 +1,9 @@
-import 'package:expense_tracker/core/routes/route.dart';
-import 'package:expense_tracker/cubits/theme/theme_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+
+import 'core/routes/route.dart';
+import 'cubits/theme/theme_cubit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,9 +1,10 @@
-import 'package:expense_tracker/core/routes/route_name.dart';
-import 'package:expense_tracker/widgets/app_drawer.dart';
-import 'package:expense_tracker/widgets/app_input_dilog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../core/routes/route_name.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/app_input_dilog.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

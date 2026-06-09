@@ -1,7 +1,8 @@
-import 'package:expense_tracker/models/expanses_model.dart';
-import 'package:expense_tracker/services/app_graphs_services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
+import '../models/expanses_model.dart';
+import '../services/app_graphs_services.dart';
 
 class AppGraphs extends StatelessWidget {
   final List<ExpansesModel> expanses;

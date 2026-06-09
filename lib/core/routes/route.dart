@@ -1,9 +1,10 @@
-import 'package:expense_tracker/core/routes/route_name.dart';
-import 'package:expense_tracker/screens/home_screen.dart';
-import 'package:expense_tracker/screens/monthly_screen.dart';
-import 'package:expense_tracker/screens/weekly_screen.dart';
-import 'package:expense_tracker/screens/yearly_screen.dart';
+import 'package:expense/core/routes/route_name.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../screens/home_screen.dart';
+import '../../screens/monthly_screen.dart';
+import '../../screens/weekly_screen.dart';
+import '../../screens/yearly_screen.dart';
 
 final GoRouter route = GoRouter(
   routes: [
