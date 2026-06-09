@@ -22,3 +22,8 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+dependencies {
+    // ...
+    implementation("com.google.android.material:material:<version>")
+    // ...
+}
