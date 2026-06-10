@@ -10,7 +10,8 @@ import '../widgets/app_graphs.dart';
 import '../widgets/app_input_dilog.dart';
 
 class YearlyScreen extends StatelessWidget {
-  const YearlyScreen({super.key});
+  final bool isDark;
+  const YearlyScreen({super.key, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +86,7 @@ class YearlyScreen extends StatelessWidget {
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               return Card(
-                                color: (expanses[index].isDone) ? Colors.green[100] : Colors.white,
+                                color: (isDark) ? Colors.grey : Colors.white,
                                 child: ListTile(
                                   onLongPress: () {
                                     HiveService.expenseBox().put(
@@ -104,22 +105,44 @@ class YearlyScreen extends StatelessWidget {
                                   title: Center(
                                     child: Text(
                                       expanses[index].title,
-                                      style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        decoration: (expanses[index].isDone)
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   subtitle: Text(
                                     "${DateTimeService.dateTimeToString(expanses[index].dateTime)[0]} ${DateTimeService.dateTimeToString(expanses[index].dateTime)[1]}",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                      decoration: (expanses[index].isDone)
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   trailing: Column(
                                     children: [
                                       Text(
                                         "Rs,${expanses[index].prices.toString()}",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       Text(
                                         "Changed:${expanses[index].updated}",
-                                        style: TextStyle(fontSize: 14),
+                                        style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),

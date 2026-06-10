@@ -9,16 +9,17 @@ import '../services/hive_service.dart';
 import '../widgets/app_graphs.dart';
 import '../widgets/app_input_dilog.dart';
 
-class WeeklyScreen extends StatefulWidget {
-  const WeeklyScreen({super.key});
+class WeeklyScreen extends StatelessWidget {
+  final bool isDark;
+  final Box boxExpanses;
+  final String expansesBoxName;
+  const WeeklyScreen({
+    super.key,
+    required this.isDark,
+    required this.boxExpanses,
+    required this.expansesBoxName,
+  });
 
-  @override
-  State<WeeklyScreen> createState() => _WeeklyScreenState();
-}
-
-class _WeeklyScreenState extends State<WeeklyScreen> {
-  Box boxExpanses = HiveService.expenseBox();
-  final String expansesBoxName = HiveService.expenseBoxName;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -86,9 +87,7 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               return Card(
-                                color: (expanses[index].isDone)
-                                    ? Colors.green[100]
-                                    : Colors.white,
+                                color: (isDark) ? Colors.grey : Colors.white,
                                 child: ListTile(
                                   onLongPress: () {
                                     HiveService.expenseBox().put(
@@ -100,35 +99,51 @@ class _WeeklyScreenState extends State<WeeklyScreen> {
                                     showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return AppInputDilog(
-                                          id: index,
-                                          expanses: expanses[index],
-                                        );
+                                        return AppInputDilog(id: index, expanses: expanses[index]);
                                       },
                                     );
                                   },
                                   title: Center(
                                     child: Text(
                                       expanses[index].title,
-                                      style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        decoration: (expanses[index].isDone)
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   subtitle: Text(
                                     "${DateTimeService.dateTimeToString(expanses[index].dateTime)[0]} ${DateTimeService.dateTimeToString(expanses[index].dateTime)[1]}",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                      decoration: (expanses[index].isDone)
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   trailing: Column(
                                     children: [
                                       Text(
                                         "Rs,${expanses[index].prices.toString()}",
                                         style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
                                         "Changed:${expanses[index].updated}",
-                                        style: TextStyle(fontSize: 14),
+                                        style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),

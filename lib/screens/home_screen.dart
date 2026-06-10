@@ -1,3 +1,4 @@
+import 'package:expense_tracker/services/hive_service.dart' show HiveService;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Shimmer.fromColors(
-          baseColor: Colors.black,
+          baseColor: (HiveService.getSettings().isDark) ? Colors.grey : Colors.black,
           highlightColor: Colors.blue,
           child: Text("Expanses Tracker"),
         ),
@@ -48,6 +49,13 @@ class HomeScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => context.push(RouteName.yearlyScreen),
                   child: Text("Yearly", style: TextStyle(fontSize: 18)),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.push(RouteName.addMobileScreen),
+                  child: Text("AddMobileScreen", style: TextStyle(fontSize: 18)),
                 ),
               ),
             ],

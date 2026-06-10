@@ -47,10 +47,14 @@ class AppImagePicker extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 spacing: 15,
                 children: [
-                  ElevatedButton.icon(onPressed: () async{
-                      await imagePickerServices.saveImage();
-
-                  }, label: Text("Set"), icon: Icon(Icons.save)),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      imagePickerServices.saveImage();
+                      context.pop();
+                    },
+                    label: Text("Set"),
+                    icon: Icon(Icons.save),
+                  ),
                   ElevatedButton.icon(
                     onPressed: () {
                       context.pop();

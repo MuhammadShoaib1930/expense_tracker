@@ -1,4 +1,3 @@
-
 import '../models/expanses_model.dart';
 
 class AppGraphsServices {
@@ -9,6 +8,7 @@ class AppGraphsServices {
     }
     return max;
   }
+
   static double minValue(List<ExpansesModel> expanses) {
     double min = double.infinity;
     for (var value in expanses) {
@@ -20,7 +20,7 @@ class AppGraphsServices {
   static double totalExpanses(List<ExpansesModel> expanses) {
     double max = 0;
     for (var exp in expanses) {
-      max += exp.prices;
+      if (exp.isDone != true) max += exp.prices;
     }
     return max;
   }

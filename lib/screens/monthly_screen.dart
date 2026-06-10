@@ -9,14 +9,10 @@ import '../services/hive_service.dart';
 import '../widgets/app_graphs.dart';
 import '../widgets/app_input_dilog.dart';
 
-class MonthlyScreen extends StatefulWidget {
-  const MonthlyScreen({super.key});
+class MonthlyScreen extends StatelessWidget {
+  final bool isDark;
+  const MonthlyScreen({super.key, required this.isDark});
 
-  @override
-  State<MonthlyScreen> createState() => _MonthlyScreenState();
-}
-
-class _MonthlyScreenState extends State<MonthlyScreen> {
   @override
   Widget build(BuildContext context) {
     final String expansesBoxName = HiveService.expenseBoxName;
@@ -89,7 +85,7 @@ class _MonthlyScreenState extends State<MonthlyScreen> {
                           child: ListView.separated(
                             itemBuilder: (context, index) {
                               return Card(
-                                color: (expanses[index].isDone) ? Colors.green[100] : Colors.white,
+                                color: (isDark) ? Colors.grey : Colors.white,
                                 child: ListTile(
                                   onLongPress: () {
                                     HiveService.expenseBox().put(
@@ -108,22 +104,44 @@ class _MonthlyScreenState extends State<MonthlyScreen> {
                                   title: Center(
                                     child: Text(
                                       expanses[index].title,
-                                      style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        decoration: (expanses[index].isDone)
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   subtitle: Text(
                                     "${DateTimeService.dateTimeToString(expanses[index].dateTime)[0]} ${DateTimeService.dateTimeToString(expanses[index].dateTime)[1]}",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                      decoration: (expanses[index].isDone)
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   trailing: Column(
                                     children: [
                                       Text(
                                         "Rs,${expanses[index].prices.toString()}",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       Text(
                                         "Changed:${expanses[index].updated}",
-                                        style: TextStyle(fontSize: 14),
+                                        style: TextStyle(
+                                          decoration: (expanses[index].isDone)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ],
                                   ),

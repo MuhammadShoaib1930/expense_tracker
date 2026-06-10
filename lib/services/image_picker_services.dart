@@ -15,15 +15,21 @@ class ImagePickerServices {
   Future<void> saveImage() async {
     if (image != null) {
       final sourceFile = File(image!.path);
-      Directory dir = await getApplicationDocumentsDirectory();
 
-      final String targetPath = "${dir.path}/profile.jpg";
-      final targetFile = File(targetPath);
-
-      if (await targetFile.exists()) {
-        await targetFile.delete();
+      final oldPath = HiveService.getSettings().profileImagePath;
+      if (oldPath.isNotEmpty) {
+        final oldFile = File(oldPath);
+        if (await oldFile.exists()) {
+          await oldFile.delete();
+        }
       }
+      final fileName = image!.name;
+
+      final dir = await getApplicationDocumentsDirectory();
+      final targetPath = '${dir.path}/$fileName';
+
       await sourceFile.copy(targetPath);
+
       HiveService.saveSettings(HiveService.getSettings().copyWith(profileImagePath: targetPath));
     }
   }
