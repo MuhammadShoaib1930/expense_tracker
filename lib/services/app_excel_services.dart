@@ -1,11 +1,15 @@
-import 'dart:io';
-import 'package:excel/excel.dart';
-import 'package:path_provider/path_provider.dart';
+import 'dart:io' show File;
 
-import '../models/expanses_model.dart';
+import 'package:excel/excel.dart' show Excel, TextCellValue, DoubleCellValue;
+import 'package:expense_tracker/models/expanses_model.dart' show ExpansesModel;
+import 'package:expense_tracker/models/settings_model.dart' show SettingsModel;
+import 'package:expense_tracker/services/hive_service.dart' show HiveService;
+import 'package:path_provider/path_provider.dart' show getDownloadsDirectory;
 
 class AppExcelServices {
   Future<File> createExpenseExcel(List<ExpansesModel> expenses) async {
+    SettingsModel settingsModel = HiveService.getSettings();
+    HiveService.saveSettings(settingsModel.copyWith(token: settingsModel.token - 1));
     final excel = Excel.createExcel();
     final sheet = excel['Expenses'];
 
@@ -28,7 +32,7 @@ class AppExcelServices {
     }
 
     // 💰 Total row
-    final total = expenses.fold(0.0, (sum, e) => sum + e.prices);
+    final total = expenses.fold(0.0, (sum, e) => (!e.isDone) ? sum + e.prices : 0);
 
     sheet.appendRow([
       TextCellValue(''),
@@ -38,8 +42,8 @@ class AppExcelServices {
     ]);
 
     // 📂 Save file
-    final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/expense_report.xlsx';
+    final directory = await getDownloadsDirectory();
+    final filePath = '${directory!.path}/expense_report.xlsx';
 
     final fileBytes = excel.save();
     final file = File(filePath);

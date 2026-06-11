@@ -20,19 +20,22 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
       isDark: fields[0] as bool,
       userName: fields[1] as String,
       profileImagePath: fields[2] as String,
+      token: fields[3] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, SettingsModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.isDark)
       ..writeByte(1)
       ..write(obj.userName)
       ..writeByte(2)
-      ..write(obj.profileImagePath);
+      ..write(obj.profileImagePath)
+      ..writeByte(3)
+      ..write(obj.token);
   }
 
   @override
@@ -41,7 +44,5 @@ class SettingsModelAdapter extends TypeAdapter<SettingsModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SettingsModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is SettingsModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

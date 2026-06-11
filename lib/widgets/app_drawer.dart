@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:expense_tracker/services/google_ad_services.dart';
+import 'package:expense_tracker/services/permission_servers.dart';
+import 'package:expense_tracker/widgets/app_snakbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../cubits/theme/theme_cubit.dart';
 import '../models/settings_model.dart';
 import '../services/app_pdf_services.dart';
 import '../services/app_share_services.dart';
@@ -16,7 +18,8 @@ import 'app_image_picker.dart';
 import 'app_name_picker_dialog.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+  final GoogleAdServices googleAdServices;
+  const AppDrawer({super.key, required this.googleAdServices});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +101,6 @@ class AppDrawer extends StatelessWidget {
                 onPressed: () {
                   SettingsModel settingsModel = HiveService.getSettings();
                   HiveService.saveSettings(settingsModel.copyWith(isDark: !settingsModel.isDark));
-                  context.read<ThemeCubit>().themeTogle();
                 },
                 label: Text((isDark) ? "Light" : "Dark", style: TextStyle(fontSize: 18)),
                 icon: Icon((isDark) ? Icons.sunny : Icons.dark_mode),
@@ -108,9 +110,19 @@ class AppDrawer extends StatelessWidget {
               width: 300.w,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                  if (HiveService.getSettings().token >= 1) {
+                    AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                    appSnakBar(context, message: "PDF file downloading ...");
+                  } else {
+                    appSnakBar(
+                      context,
+                      message: "No tokens available. Please add tokens to continue.",
+                      iswarning: true,
+                    );
+                  }
+                  context.pop();
                 },
-                label: Text("Download expanses report as pdf! ", style: TextStyle(fontSize: 18)),
+                label: Text("Download PDF file", style: TextStyle(fontSize: 18)),
                 icon: Icon(Icons.file_copy),
               ),
             ),
@@ -118,9 +130,18 @@ class AppDrawer extends StatelessWidget {
               width: 300.w,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                  if (HiveService.getSettings().token >= 1) {
+                    AppPdfServices().createExpensePdf(HiveService.expenseBox().values.toList());
+                    appSnakBar(context, message: "Excel file downloading ...");
+                  } else {
+                    appSnakBar(
+                      context,
+                      message: "No tokens available. Please add tokens to continue.",
+                    );
+                  }
+                  context.pop();
                 },
-                label: Text("Download expanses report as Excel! ", style: TextStyle(fontSize: 18)),
+                label: Text("Download Excel file", style: TextStyle(fontSize: 18)),
                 icon: Icon(Icons.file_copy),
               ),
             ),
@@ -128,9 +149,17 @@ class AppDrawer extends StatelessWidget {
               width: 300.w,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  AppShareServices().shareExcel();
+                  if (HiveService.getSettings().token >= 1) {
+                    AppShareServices().shareExcel();
+                  } else {
+                    appSnakBar(
+                      context,
+                      message: "No tokens available. Please add tokens to continue.",
+                    );
+                  }
+                  context.pop();
                 },
-                label: Text("Shear expanses report as Excel! ", style: TextStyle(fontSize: 18)),
+                label: Text("Share expenses report as Excel!", style: TextStyle(fontSize: 18)),
                 icon: Icon(Icons.share),
               ),
             ),
@@ -138,10 +167,49 @@ class AppDrawer extends StatelessWidget {
               width: 300.w,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  AppShareServices().sharePdf();
+                  if (HiveService.getSettings().token >= 1) {
+                    AppShareServices().sharePdf();
+                  } else {
+                    appSnakBar(
+                      context,
+                      message: "No tokens available. Please add tokens to continue.",
+                    );
+                  }
+                  context.pop();
                 },
-                label: Text("Shear expanses report as pdf! ", style: TextStyle(fontSize: 18)),
+                label: Text("Share expense report as PDF ", style: TextStyle(fontSize: 18)),
                 icon: Icon(Icons.share),
+              ),
+            ),
+
+            SizedBox(
+              width: 300.w,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  if (await PermissionServers().checkInternet()) {
+                    if (googleAdServices.rewardedAd != null) {
+                      googleAdServices.rewardedAd?.show(
+                        onUserEarnedReward: (ad, reward) {
+                          SettingsModel settingsModel = HiveService.getSettings();
+                          HiveService.saveSettings(
+                            settingsModel.copyWith(token: settingsModel.token + 1),
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
+                label: ValueListenableBuilder(
+                  valueListenable: Hive.box<SettingsModel>(
+                    HiveService.settingBoxName,
+                  ).listenable(keys: [HiveService.settingBoxName]),
+                  builder: (context, Box<SettingsModel> box, child) {
+                    SettingsModel settingsModel =
+                        box.get(HiveService.settingBoxName) ?? HiveService.getSettings();
+                    return Text("Tokens: ${settingsModel.token}");
+                  },
+                ),
+                icon: Icon(Icons.add),
               ),
             ),
 

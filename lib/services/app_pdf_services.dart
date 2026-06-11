@@ -1,11 +1,15 @@
-import 'dart:io';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
+import 'dart:io' show File;
 
-import '../models/expanses_model.dart';
+import 'package:expense_tracker/models/expanses_model.dart' show ExpansesModel;
+import 'package:expense_tracker/models/settings_model.dart' show SettingsModel;
+import 'package:expense_tracker/services/hive_service.dart' show HiveService;
+import 'package:path_provider/path_provider.dart' show getDownloadsDirectory;
+import 'package:pdf/widgets.dart' as pw;
 
 class AppPdfServices {
   Future<File> createExpensePdf(List<ExpansesModel> expenses) async {
+    SettingsModel settingsModel = HiveService.getSettings();
+    HiveService.saveSettings(settingsModel.copyWith(token: settingsModel.token - 1));
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -55,7 +59,7 @@ class AppPdfServices {
 
               // 💰 Total
               pw.Text(
-                "Total: \$${expenses.fold(0.0, (sum, e) => sum + e.prices).toStringAsFixed(2)}",
+                "Total: \$${expenses.fold(0.0, (sum, e) => (!e.isDone) ? sum + e.prices : 0).toStringAsFixed(2)}",
                 style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
               ),
             ],

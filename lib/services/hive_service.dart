@@ -39,7 +39,7 @@ class HiveService {
       isDark: false,
       userName: "Guest",
       profileImagePath: "",
-      
+      token: 3,
     );
     return settingBox().get(settingBoxName) ?? settingsModel;
   }

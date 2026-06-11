@@ -1,4 +1,7 @@
+import 'package:expense_tracker/models/settings_model.dart';
+import 'package:expense_tracker/services/google_ad_services.dart';
 import 'package:expense_tracker/services/hive_service.dart' show HiveService;
+import 'package:expense_tracker/services/permission_servers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
@@ -8,12 +11,13 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_input_dilog.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final GoogleAdServices googleAdServices;
+  const HomeScreen({super.key, required this.googleAdServices});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(),
+      drawer: AppDrawer(googleAdServices: GoogleAdServices()),
       appBar: AppBar(
         title: Shimmer.fromColors(
           baseColor: (HiveService.getSettings().isDark) ? Colors.grey : Colors.black,
